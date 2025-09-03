@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { Todo } from './entities/todo.entity';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class TodoService {
+  private todos: Todo[] = [
+    { id: 1, description: 'Learn NestJS', done: false },
+    { id: 2, description: 'Learn TypeScript', done: false },
+    { id: 3, description: 'Learn GraphQL', done: true },
+  ];
+
   create(createTodoDto: CreateTodoDto) {
-    return 'This action adds a new todo';
+    const newTodo = {
+      id: this.todos.length + 1,
+      ...createTodoDto,
+    };
+    this.todos.push(newTodo);
+    return newTodo;
   }
 
-  findAll() {
-    return `This action returns all todo`;
+  findAll(): Todo[] {
+    return this.todos;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} todo`;
+    const todo = this.todos.find((todo) => todo.id === id);
+    if (!todo) throw new NotFoundException(`Todo with ID ${id} not found`);
+    return todo;
   }
 
   update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
+    this.findOne(id);
+    const todosF = this.todos.filter((t) => t.id !== id);
+    todosF.push({
+      id,
+      description: '',
+      done: false,
+      ...updateTodoDto,
+    });
+    this.todos = todosF;
+    return this.findOne(id);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} todo`;
+    this.findOne(id);
+    const todosF = this.todos.filter((t) => t.id !== id);
+    this.todos = todosF;
+    return { description: `el elemento ${id} ha sido eliminado` };
   }
 }
