@@ -1,11 +1,19 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Float, Int, Query, Resolver } from '@nestjs/graphql';
 
 @Resolver()
 export class HelloWorldResolver {
-  //     # Query => @nestjs/graphql
-  // # [Pet] = Arreglo de mascotas
-  @Query(() => String)
+  @Query(() => String, { name: 'hello' })
   helloWordl(): string {
-    return 'hola m'; // lógica
+    return 'hola mundo'; // lógica
+  }
+
+  @Query(() => Float, { name: 'randomNumber' })
+  getRandomNumber(): number {
+    return Math.random() * 100;
+  }
+
+  @Query(() => Int, { name: 'randomZeroToTen' })
+  getRandomZeroToTen(): number {
+    return Math.floor(Math.random() * 10); // entereo randomico de 0 - 9
   }
 }

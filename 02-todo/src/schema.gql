@@ -3,5 +3,7 @@
 # ------------------------------------------------------
 
 type Query {
-  helloWordl: String!
+  hello: String!
+  randomNumber: Float!
+  randomZeroToTen: Int!
 }
