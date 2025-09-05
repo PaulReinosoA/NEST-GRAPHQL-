@@ -15,4 +15,7 @@ type Query {
   """Retorna un numero randomico entre 0 y el numero que le pasemos"""
   randomZeroToTen(to: Int): Int!
   todos: [Todo!]!
+
+  """Obtiene un todo por ID"""
+  todo(id: Int): Todo!
 }
