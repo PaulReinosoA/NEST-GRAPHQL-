@@ -19,3 +19,25 @@ type Query {
   """Obtiene un todo por ID"""
   todo(id: Int): Todo!
 }
+
+type Mutation {
+  createTodo(CreateTodoInput: CreateTodoInput!): Todo!
+  updateTodo(updateTodoInput: UpdateTodoInput!): Todo!
+  removeTodo(id: Int!): Boolean!
+}
+
+input CreateTodoInput {
+  """What needs to be done"""
+  description: String!
+}
+
+input UpdateTodoInput {
+  """id of todo"""
+  id: Int!
+
+  """What needs to be done"""
+  description: String
+
+  """state of todo"""
+  done: Boolean
+}

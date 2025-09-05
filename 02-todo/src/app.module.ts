@@ -14,6 +14,7 @@ import { TodoModule } from './todo/todo.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      includeStacktraceInErrorResponses: false,  //deshabilitarlo  stacktrace
     }),
     HelloWorldModule,
     TodoModule,

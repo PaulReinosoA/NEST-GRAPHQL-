@@ -3,3 +3,26 @@
 </p>
 
 ### utilizamos code first para esta aplicacion con GRAPHQL
+
+
+## Query para apolo de ejemplo con fragmentos
+
+```` 
+query {
+  todo1: todo(id: 1) {
+    ...fields
+  }
+  todo2: todo(id: 2) {
+    ...fields
+  }
+  todo3: todo(id: 3) {
+    ...fields
+  }
+}
+
+fragment fields on Todo {
+  id
+  description
+  done
+}
+```` 
