@@ -26,3 +26,28 @@ fragment fields on Todo {
   done
 }
 ```` 
+
+### another example
+
+
+```` 
+{
+  Complete: todos(status: true) {
+    ...fields
+  }
+
+  pending: todos(status: false) {
+    ...fields
+  }
+
+  todos {
+    ...fields
+  }
+}
+
+fragment fields on Todo {
+  description
+  id
+  done
+}
+```` 

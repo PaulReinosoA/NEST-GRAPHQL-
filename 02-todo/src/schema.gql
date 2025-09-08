@@ -8,16 +8,30 @@ type Todo {
   done: Boolean!
 }
 
+"""todo Quick agregation"""
+type AgregationType {
+  total: Int!
+  pending: Int!
+  completed: Int!
+}
+
 type Query {
   hello: String!
   randomNumber: Float!
 
   """Retorna un numero randomico entre 0 y el numero que le pasemos"""
   randomZeroToTen(to: Int): Int!
-  todos: [Todo!]!
+  todos(
+    """state of todo"""
+    status: Boolean
+  ): [Todo!]!
 
   """Obtiene un todo por ID"""
   todo(id: Int): Todo!
+  totalTodos: Int! @deprecated(reason: "this method is deficient, must be use another")
+  completedTodos: Int!
+  pendingsTodos: Int!
+  agregation: AgregationType!
 }
 
 type Mutation {
