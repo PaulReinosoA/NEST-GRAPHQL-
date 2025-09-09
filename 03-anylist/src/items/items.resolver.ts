@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { ItemsService } from './items.service';
 import { Item } from './entities/item.entity';
 import { CreateItemInput } from './dto/create-item.input';
@@ -14,7 +14,10 @@ export class ItemsResolver {
   }
 
   @Query(() => [Item], { name: 'items' })
-  findAll() {
+  findAll(@Context() context) {
+    const trackingId = context.req.headers['trackingid'];
+    console.log(`Tracking ID in resolver: ${trackingId}`);
+
     return this.itemsService.findAll();
   }
 

@@ -8,8 +8,8 @@ export class ItemsService {
     return 'This action adds a new item';
   }
 
-  findAll() {
-    return [];
+  findAll() {    
+    return []
   }
 
   findOne(id: number) {
