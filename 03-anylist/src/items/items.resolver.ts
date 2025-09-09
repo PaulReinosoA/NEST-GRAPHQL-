@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  Context,
+  ID,
+} from '@nestjs/graphql';
 import { ItemsService } from './items.service';
 import { Item } from './entities/item.entity';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
@@ -16,7 +24,9 @@ export class ItemsResolver {
   }
 
   @Query(() => [Item], { name: 'items' })
-  async findAll(): Promise<Item[]> {
+  async findAll(@Context() context): Promise<Item[]> {
+    const trackingId = context.req.headers['trackingid'];
+    console.log(`Tracking ID in resolver: ${trackingId}`);
     return this.itemsService.findAll();
   }
 
