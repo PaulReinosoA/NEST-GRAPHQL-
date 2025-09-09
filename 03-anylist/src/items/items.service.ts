@@ -1,19 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { CreateItemInput } from './dto/create-item.input';
-import { UpdateItemInput } from './dto/update-item.input';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateItemInput, UpdateItemInput } from './dto/inputs';
+import { Item } from './entities/item.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ItemsService {
-  create(createItemInput: CreateItemInput) {
-    return 'This action adds a new item';
+  constructor(
+    @InjectRepository(Item)
+    private readonly itemRepository: Repository<Item>,
+  ) {}
+
+  async create(createItemInput: CreateItemInput): Promise<Item> {
+    const Item = this.itemRepository.create(createItemInput); //instancia no impactada en BD
+    await this.itemRepository.save(Item);
+    return Item;
   }
 
-  findAll() {
-    return [];
+  findAll(): Promise<Item[]> {
+    return this.itemRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: string): Promise<Item> {
+    const item = await this.itemRepository.findOneBy({ id: id });
+    if (!item) throw new NotFoundException(`item with id:${id} not fpound`);
+    return item;
   }
 
   update(id: number, updateItemInput: UpdateItemInput) {

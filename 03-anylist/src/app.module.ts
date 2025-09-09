@@ -5,17 +5,31 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 
 import { join } from 'path';
 import { ItemsModule } from './items/items.module';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(), //envs
     GraphQLModule.forRoot<ApolloDriverConfig>({
       // debug: false,
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      includeStacktraceInErrorResponses: false,  //deshabilitarlo  stacktrace
-      
+      includeStacktraceInErrorResponses: false, //deshabilitarlo  stacktrace
+    }),
+    TypeOrmModule.forRoot({
+      //bdd postgres
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT!,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: [],
+      synchronize: true,
+      autoLoadEntities: true,
     }),
     ItemsModule,
   ],
