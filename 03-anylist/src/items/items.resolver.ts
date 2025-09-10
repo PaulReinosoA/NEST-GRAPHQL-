@@ -1,12 +1,4 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  Int,
-  Context,
-  ID,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context, ID } from '@nestjs/graphql';
 import { ItemsService } from './items.service';
 import { Item } from './entities/item.entity';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
@@ -24,8 +16,8 @@ export class ItemsResolver {
   }
 
   @Query(() => [Item], { name: 'items' })
-  async findAll(@Context() context): Promise<Item[]> {
-    const trackingId = context.req.headers['trackingid'];
+  async findAll(@Context() context: { req: { headers: Record<string, string> } }): Promise<Item[]> {
+    const trackingId: string | undefined = context.req.headers['trackingid'];
     console.log(`Tracking ID in resolver: ${trackingId}`);
     return this.itemsService.findAll();
   }
@@ -38,12 +30,16 @@ export class ItemsResolver {
   }
 
   @Mutation(() => Item)
-  updateItem(@Args('updateItemInput') updateItemInput: UpdateItemInput) {
+  updateItem(
+    @Args('updateItemInput') updateItemInput: UpdateItemInput,
+  ): Promise<Item> {
     return this.itemsService.update(updateItemInput.id, updateItemInput);
   }
 
   @Mutation(() => Item)
-  removeItem(@Args('id', { type: () => Int }) id: number) {
+  removeItem(
+    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+  ): Promise<Item> {
     return this.itemsService.remove(id);
   }
 }
