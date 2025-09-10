@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Injectable,
   NestInterceptor,
@@ -17,8 +19,8 @@ export class TrackingIdInterceptor implements NestInterceptor {
 
     const request = httpContext.getRequest() || gqlContext.getContext().req;
 
-    if (request) {
-      const trackingId = uuidv4();
+    if (request) {      
+      const trackingId :string = uuidv4();
       request.headers['trackingid'] = trackingId;
       Logger.log(`Tracking ID added to request: ${trackingId}`);
     }

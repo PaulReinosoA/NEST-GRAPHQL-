@@ -16,7 +16,9 @@ export class ItemsResolver {
   }
 
   @Query(() => [Item], { name: 'items' })
-  async findAll(@Context() context: { req: { headers: Record<string, string> } }): Promise<Item[]> {
+  async findAll(
+    @Context() context: { req: { headers: Record<string, string> } },
+  ): Promise<Item[]> {
     const trackingId: string | undefined = context.req.headers['trackingid'];
     console.log(`Tracking ID in resolver: ${trackingId}`);
     return this.itemsService.findAll();
