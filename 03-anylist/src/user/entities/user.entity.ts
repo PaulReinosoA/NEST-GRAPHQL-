@@ -17,7 +17,7 @@ export class User {
   email: string;
 
   @Column()
-  //@Field(()=>String)
+  //@Field(()=>String) // este comentario hace que no me retorne el dato en el endpoint
   password: string;
 
   @Column({ type: 'text', array: true, default: ['user'] })

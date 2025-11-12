@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 
@@ -6,14 +6,14 @@ import { User } from './entities/user.entity';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Query(() => [User], { name: 'user' })
+  @Query(() => [User], { name: 'findAll' })
   findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
-  @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => ID }) id: string): Promise<User> {
-    return this.userService.findOne(id);
+  @Query(() => User, { name: 'findOneByEmail' })
+  findOne(@Args('email', { type: () => String }) email: string): Promise<User> {
+    return this.userService.findOneByEmail(email);
   }
 
   // @Mutation(() => User)
@@ -21,7 +21,7 @@ export class UserResolver {
   //   return this.userService.update(updateUserInput.id, updateUserInput);
   // }
 
-  @Mutation(() => User)
+  @Mutation(() => User, { name: 'block' })
   blockUser(@Args('id', { type: () => ID }) id: string): Promise<User> {
     return this.userService.block(id);
   }
