@@ -27,6 +27,7 @@ type Query {
   item(id: ID!): Item!
   findAll: [User!]!
   findOneByEmail(email: String!): User!
+  revalidate: AuthResponse!
 }
 
 type Mutation {

@@ -2,9 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-
 // import { JwtPayload } from '../interfaces/jwt-payload.interface';
-
 import { AuthService } from '../auth.service';
 import { User } from 'src/user/entities/user.entity';
 
@@ -25,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // const { id } = payload;
     console.log({ payload });
     // const user = await this.authService.validateUser( id );
-    throw new BadRequestException(' method not implemented ');
+    throw new BadRequestException(' method not implemented :(');
   }
 }

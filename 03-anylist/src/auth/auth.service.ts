@@ -3,10 +3,18 @@ import { AuthResponse } from './types/AuthResponse.type';
 import { UserService } from 'src/user/user.service';
 import { LoginInput, SingUpInput } from './dto/inputs';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtservice: JwtService,
+  ) {}
+
+  private getJwttoken(userId: string) {
+    return this.jwtservice.sign({ id: userId });
+  }
 
   async signUp(singUpInput: SingUpInput): Promise<AuthResponse> {
     console.log(singUpInput);
@@ -15,7 +23,7 @@ export class AuthService {
     const user = await this.userService.create(singUpInput);
 
     // todo crear jwt
-    const token = 'ABC';
+    const token = this.getJwttoken(user.id);
 
     return {
       token: token,
@@ -35,7 +43,7 @@ export class AuthService {
     }
 
     // todo crear jwt
-    const token = 'ABC';
+    const token = this.getJwttoken(user.id);
 
     return {
       token: token,
