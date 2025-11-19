@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -19,10 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any): Promise<User> {
+  validate(payload: any): Promise<User> {
     // const { id } = payload;
     console.log({ payload });
     // const user = await this.authService.validateUser( id );
-    throw new BadRequestException(' method not implemented :(');
+    throw new UnauthorizedException(' token not valid :(');
   }
 }
