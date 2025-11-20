@@ -44,6 +44,17 @@ export class UserService {
     }
   }
 
+  async findOneById(id: string): Promise<User> {
+    try {
+      return await this.usersRepository.findOneByOrFail({ id: id });
+    } catch (error) {
+      throw new NotFoundException(`not found email:${id}`);
+
+      //this.handleExceptions({code:'error-001',detail:`${email} not found error${error}`});
+    }
+  }
+
+
   async findAll(): Promise<User[]> {
     return [];
   }
