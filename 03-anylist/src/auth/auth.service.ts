@@ -62,7 +62,11 @@ export class AuthService {
     if (!user.isActive)
       throw new UnauthorizedException('user is inactive, talk with an admin');
 
-    delete user.password;
     return user;
+  }
+
+  revalidateToken(user: User): AuthResponse {
+    const token = this.getJwttoken(user.id);
+    return { token, user };
   }
 }

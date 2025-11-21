@@ -4,6 +4,9 @@ import { AuthResponse } from './types/AuthResponse.type';
 import { SingUpInput, LoginInput } from './dto/inputs';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
+import { ValidRoles } from './enums/valid-roles.enum';
 
 @Resolver()
 export class AuthResolver {
@@ -21,8 +24,8 @@ export class AuthResolver {
 
   @Query(() => AuthResponse, { name: 'revalidate' })
   @UseGuards(JwtAuthGuard)
-  revalidateToken(): AuthResponse {
-    //return this.authService.revalidateToken();
-    throw new Error('no implementado');
+  revalidateToken(@CurrentUser([ValidRoles.admin]) user: User): AuthResponse {
+    //console.log('revalidate token ', user);
+    return this.authService.revalidateToken(user);
   }
 }
