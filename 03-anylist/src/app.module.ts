@@ -34,14 +34,14 @@ import { AuthModule } from './auth/auth.module';
     // }),
 
     // //todo:configuracion basica
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      // debug: false,
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      includeStacktraceInErrorResponses: false, //deshabilitarlo  stacktrace
-    }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   // debug: false,
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    //   playground: false,
+    //   plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    //   includeStacktraceInErrorResponses: false, //deshabilitarlo  stacktrace
+    // }),
     TypeOrmModule.forRoot({
       //bdd postgres
       type: 'postgres',
