@@ -13,7 +13,7 @@ export const CurrentUser = createParamDecorator(
     const ctx = GqlExecutionContext.create(contex);
     const user: User = ctx.getContext().req.user;
 
-    console.log({ roles });
+    //console.log({ 'roles1':roles });
     if (!user) {
       throw new InternalServerErrorException(
         'error interno del servidor, comuniquese con el admin del sistema',

@@ -9,10 +9,31 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+// import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot(), //envs
+
+    //todo:configuracion asyncrona
+    // GraphQLModule.forRootAsync({
+    //   driver: ApolloDriver,
+    //   imports: [AuthModule],
+    //   inject: [JwtService],
+    //   useFactory: async (jwtService: JwtService) => ({
+    //     playground: false,
+    //     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    //     plugins: [ApolloServerPluginLandingPageLocalDefault],
+    //     context({ req }) {
+    //       const token = req.headers.authorization?.replace('Bearer ','');
+    //       if ( !token ) throw Error('Token needed');
+    //       const payload = jwtService.decode( token );
+    //       if ( !payload ) throw Error('Token not valid');
+    //     },
+    //   }),
+    // }),
+
+    // //todo:configuracion basica
     GraphQLModule.forRoot<ApolloDriverConfig>({
       // debug: false,
       driver: ApolloDriver,

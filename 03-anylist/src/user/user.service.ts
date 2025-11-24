@@ -11,6 +11,8 @@ import { User } from './entities/user.entity';
 import { SingUpInput } from 'src/auth/dto/inputs/singup.input';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
+import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UserService {
@@ -38,7 +40,7 @@ export class UserService {
     try {
       return await this.usersRepository.findOneByOrFail({ email: email });
     } catch (error) {
-      throw new NotFoundException(`not found email:${email}`);
+      throw new NotFoundException(`not found email:${email}, error: ${error}`);
 
       //this.handleExceptions({code:'error-001',detail:`${email} not found error${error}`});
     }
@@ -46,25 +48,53 @@ export class UserService {
 
   async findOneById(id: string): Promise<User> {
     try {
-      return await this.usersRepository.findOneByOrFail({ id: id });
+      return await this.usersRepository.findOneByOrFail({ id });
     } catch (error) {
-      throw new NotFoundException(`not found email:${id}`);
-
-      //this.handleExceptions({code:'error-001',detail:`${email} not found error${error}`});
+      throw new NotFoundException(`${id} not found, error: ${error}`);
     }
   }
 
+  async findAll(roles: ValidRoles[]): Promise<User[]> {
+    if (roles.length === 0)
+      return await this.usersRepository.find({
+        relations: { lastUpdateBy: true }, //ya no es necesario poir el lazy para relaciones
+      });
 
-  async findAll(): Promise<User[]> {
-    return [];
+    // roles...
+    return await this.usersRepository
+      .createQueryBuilder()
+      .andWhere('ARRAY[roles] && ARRAY[:...roles]')
+      .setParameter('roles', roles)
+      .getMany();
   }
 
-  // update(id: number, updateUserInput: UpdateUserInput){
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(
+    id: string,
+    updateUserInput: UpdateUserInput,
+    user: User,
+  ): Promise<User> {
+    try {
+      this.findOneById(id);
 
-  async block(id: string): Promise<User> {
-    throw new Error(`method not implemented, Id sent: ${id}`);
+      // const userUpdated: User = {
+      //   ...updateUserInput,
+      //   lastUpdateBy: user,
+      // };
+      const userDb = await this.usersRepository.preload({
+        ...updateUserInput,
+        lastUpdateBy: user,
+      });
+      return this.usersRepository.save(userDb!);
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+  }
+
+  async block(id: string, user: User): Promise<User> {
+    const userBlock = await this.findOneById(id);
+    userBlock.isActive = false;
+    userBlock.lastUpdateBy = user;
+    return await this.usersRepository.save(userBlock);
   }
 
   private handleExceptions(error: any): never {

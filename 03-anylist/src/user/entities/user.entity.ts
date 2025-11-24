@@ -1,5 +1,11 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 @ObjectType()
@@ -27,4 +33,15 @@ export class User {
   @Column({ type: 'boolean', default: true })
   @Field(() => Boolean)
   isActive: boolean;
+
+  //todo: relaciones
+
+  @ManyToOne(() => User, (user) => user.lastUpdateBy, {
+    nullable: true,
+    //eager: true, //con excepcion de querybuilder en las demas carga relacion automatica!
+    lazy: true, //con esto si carga automaticamente!
+  })
+  @JoinColumn({ name: 'lasUpdateBy' })
+  @Field(() => User, { nullable: true })
+  lastUpdateBy?: User;
 }
