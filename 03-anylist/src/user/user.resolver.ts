@@ -1,4 +1,13 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ID,
+  ResolveField,
+  Int,
+  Parent,
+} from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { ValidRolesArgs } from './args/roles.arg';
@@ -7,11 +16,15 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
 import { UpdateUserInput } from './dto/update-user.input';
+import { ItemsService } from 'src/items/items.service';
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard) //SOLICITA TOKEN EN PETICION
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly itemsService: ItemsService,
+  ) {}
 
   @Query(() => [User], { name: 'users' })
   findAll(
@@ -35,8 +48,8 @@ export class UserResolver {
   updateUser(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
     @CurrentUser([ValidRoles.admin]) user: User,
-  ):Promise<User> {
-    return this.userService.update(updateUserInput.id, updateUserInput,user);
+  ): Promise<User> {
+    return this.userService.update(updateUserInput.id, updateUserInput, user);
   }
 
   @Mutation(() => User, { name: 'blockUser' })
@@ -45,5 +58,13 @@ export class UserResolver {
     @CurrentUser([ValidRoles.admin]) user: User, //SOLICITA ROL DE USUARIO
   ): Promise<User> {
     return this.userService.block(id, user);
+  }
+
+  @ResolveField(() => Int, { name: 'itemCount' })
+  async itemCount(
+    @Parent() user: User,
+    @CurrentUser([ValidRoles.admin]) adminUser: User, //solo agrego para reglas de validacion
+  ): Promise<number> {
+    return this.itemsService.itemCountByUser(user);
   }
 }

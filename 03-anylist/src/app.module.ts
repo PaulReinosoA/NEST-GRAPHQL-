@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 // import { JwtService } from '@nestjs/jwt';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AuthModule } from './auth/auth.module';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       includeStacktraceInErrorResponses: false, //deshabilitarlo  stacktrace
     }),
+    
     TypeOrmModule.forRoot({
       //bdd postgres
       type: 'postgres',
@@ -57,6 +59,7 @@ import { AuthModule } from './auth/auth.module';
     ItemsModule,
     UserModule,
     AuthModule,
+    SeedModule,
   ],
   controllers: [],
   providers: [],
