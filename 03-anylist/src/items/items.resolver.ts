@@ -6,6 +6,7 @@ import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { PaginationArgs } from 'src/common/dto/args/pagination.args';
 
 @Resolver(() => Item)
 @UseGuards(JwtAuthGuard)
@@ -17,18 +18,20 @@ export class ItemsResolver {
     @Args('createItemInput') createItemInput: CreateItemInput,
     @CurrentUser() user: User,
   ): Promise<Item> {
-    console.log({user});
-    return this.itemsService.create(createItemInput,user);
+    console.log({ user });
+    return this.itemsService.create(createItemInput, user);
   }
 
   @Query(() => [Item], { name: 'items' })
   async findAll(
     @Context() context: { req: { headers: Record<string, string> } },
     @CurrentUser() user: User,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Item[]> {
+    // console.log({ paginationArgs });
     const trackingId: string | undefined = context.req.headers['trackingid'];
     console.log(`Tracking ID in resolver: ${trackingId}`);
-    return this.itemsService.findAll(user);
+    return this.itemsService.findAll(user,paginationArgs);
   }
 
   @Query(() => Item, { name: 'item' })
@@ -36,7 +39,7 @@ export class ItemsResolver {
     @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
     @CurrentUser() user: User,
   ): Promise<Item> {
-    return this.itemsService.findOne(id,user);
+    return this.itemsService.findOne(id, user);
   }
 
   @Mutation(() => Item)
@@ -44,7 +47,7 @@ export class ItemsResolver {
     @Args('updateItemInput') updateItemInput: UpdateItemInput,
     @CurrentUser() user: User,
   ): Promise<Item> {
-    return this.itemsService.update(updateItemInput.id, updateItemInput,user);
+    return this.itemsService.update(updateItemInput.id, updateItemInput, user);
   }
 
   @Mutation(() => Item)
@@ -52,6 +55,6 @@ export class ItemsResolver {
     @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
     @CurrentUser() user: User,
   ): Promise<Item> {
-    return this.itemsService.remove(id,user);
+    return this.itemsService.remove(id, user);
   }
 }
