@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { PaginationArgs } from 'src/common/dto/args/pagination.args';
+import { SearchArgs } from 'src/common/dto/args/search.args';
 
 @Injectable()
 export class ItemsService {
@@ -19,14 +20,33 @@ export class ItemsService {
     return Item;
   }
 
-  findAll(user: User, paginationArgs: PaginationArgs): Promise<Item[]> {
+  findAll(
+    user: User,
+    paginationArgs: PaginationArgs,
+    searchArgs: SearchArgs,
+  ): Promise<Item[]> {
     const { limit, offset } = paginationArgs;
+    const { search } = searchArgs;
 
-    return this.itemRepository.find({
-      take: limit,
-      skip: offset,
-      where: { user: { id: user.id } },
-    });
+    // return this.itemRepository.find({
+    //   take: limit,
+    //   skip: offset,
+    //   where: { user: { id: user.id }, name: Like(`%${search}%`) },
+    // });
+
+    const itemQuery = this.itemRepository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .where(`"userId"=:userId`, { userId: user.id }); //evita inyecciones
+
+    if (search) {
+      itemQuery.andWhere(`LOWER(name) like :name`, {
+        name: `%${search.toLowerCase()}%`,
+      });
+    }
+
+    return itemQuery.getMany();
   }
 
   async findOne(id: string, user: User): Promise<Item> {

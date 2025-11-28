@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type List {
+  id: ID!
+  name: String!
+  user: User!
+}
+
 type User {
   id: ID!
   fullName: String!
@@ -9,7 +15,8 @@ type User {
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
-  items: [Item!]!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  list: [List!]!
   itemCount: Int!
 }
 
@@ -26,11 +33,13 @@ type AuthResponse {
 }
 
 type Query {
-  items: [Item!]!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   revalidate: AuthResponse!
+  lists: [List!]!
+  list(id: Int!): List!
 }
 
 """roles permitidos"""
@@ -51,6 +60,9 @@ type Mutation {
 
   """ejecuta la construccion de la base de datos"""
   executeSeed: Boolean!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: Int!): List!
 }
 
 input CreateItemInput {
@@ -82,4 +94,15 @@ input SingUpInput {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input CreateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

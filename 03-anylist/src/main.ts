@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
+      forbidNonWhitelisted: false//true, evita que personas manden mas info de la que espero
     }),
   );
 

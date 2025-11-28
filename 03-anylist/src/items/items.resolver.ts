@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { PaginationArgs } from 'src/common/dto/args/pagination.args';
+import { SearchArgs } from 'src/common/dto/args/search.args';
 
 @Resolver(() => Item)
 @UseGuards(JwtAuthGuard)
@@ -27,11 +28,12 @@ export class ItemsResolver {
     @Context() context: { req: { headers: Record<string, string> } },
     @CurrentUser() user: User,
     @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
   ): Promise<Item[]> {
-    // console.log({ paginationArgs });
+    console.log({ paginationArgs, searchArgs });
     const trackingId: string | undefined = context.req.headers['trackingid'];
     console.log(`Tracking ID in resolver: ${trackingId}`);
-    return this.itemsService.findAll(user,paginationArgs);
+    return this.itemsService.findAll(user, paginationArgs, searchArgs);
   }
 
   @Query(() => Item, { name: 'item' })
