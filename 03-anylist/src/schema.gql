@@ -38,8 +38,8 @@ type Query {
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   revalidate: AuthResponse!
-  lists: [List!]!
-  list(id: Int!): List!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+  list(id: ID!): List!
 }
 
 """roles permitidos"""
@@ -62,7 +62,7 @@ type Mutation {
   executeSeed: Boolean!
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
-  removeList(id: Int!): List!
+  removeList(id: ID!): List!
 }
 
 input CreateItemInput {
@@ -97,12 +97,10 @@ input LoginInput {
 }
 
 input CreateListInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
 }
 
 input UpdateListInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  id: ID!
 }
