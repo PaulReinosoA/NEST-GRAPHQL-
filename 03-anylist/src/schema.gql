@@ -2,12 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type List {
-  id: ID!
-  name: String!
-  user: User!
-}
-
 type User {
   id: ID!
   fullName: String!
@@ -20,11 +14,27 @@ type User {
   itemCount: Int!
 }
 
+type List {
+  id: ID!
+  name: String!
+  user: User!
+  listItems: [ListItem!]!
+}
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  list: List!
+  item: Item!
+}
+
 type Item {
   id: ID!
   name: String!
   quantityUnits: String
   user: User!
+  listItems: [ListItem!]!
 }
 
 type AuthResponse {
@@ -40,6 +50,7 @@ type Query {
   revalidate: AuthResponse!
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: ID!): List!
+  listItem(id: Int!): ListItem!
 }
 
 """roles permitidos"""
@@ -63,6 +74,9 @@ type Mutation {
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: ID!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
+  removeListItem(id: Int!): ListItem!
 }
 
 input CreateItemInput {
@@ -103,4 +117,19 @@ input CreateListInput {
 input UpdateListInput {
   name: String
   id: ID!
+}
+
+input CreateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
+}
+
+input UpdateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID
+  itemId: ID
+  id: Int!
 }
