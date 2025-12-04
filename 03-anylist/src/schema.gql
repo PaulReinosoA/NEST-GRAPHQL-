@@ -19,6 +19,7 @@ type List {
   name: String!
   user: User!
   listItems: [ListItem!]!
+  items: [ListItem!]!
 }
 
 type ListItem {

@@ -10,7 +10,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 export class ListItemResolver {
   constructor(private readonly listItemService: ListItemService) {}
-
+  
   @Mutation(() => ListItem)
   createListItem(
     @Args('createListItemInput') createListItemInput: CreateListItemInput,
@@ -38,7 +38,7 @@ export class ListItemResolver {
       updateListItemInput,
     );
   }
-
+  
   @Mutation(() => ListItem)
   removeListItem(@Args('id', { type: () => Int }) id: number) {
     return this.listItemService.remove(id);
