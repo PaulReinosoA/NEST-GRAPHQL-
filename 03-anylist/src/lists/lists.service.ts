@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { SearchArgs } from 'src/common/dto/args/search.args';
 import { PaginationArgs } from 'src/common/dto/args/pagination.args';
+import { ListItem } from 'src/list-item/entities/list-item.entity';
 
 @Injectable()
 export class ListsService {
