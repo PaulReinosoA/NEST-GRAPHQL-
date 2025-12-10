@@ -40,9 +40,11 @@ export class ListItemResolver {
       updateListItemInput,
     );
   }
-
+  
   // @Mutation(() => ListItem)
   // removeListItem(@Args('id', { type: () => Int }) id: number) {
   //   return this.listItemService.remove(id);
   // }
+
+  
 }
